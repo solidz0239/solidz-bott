@@ -5,7 +5,7 @@ import string
 import time
 import asyncio
 
-TOKEN = "UR TOKEN HERE"
+TOKEN = "MTUxMzUxNDA1NDkxODk5NjE4MA.GtevdL.9AFNXOvEUC1cCU3HqBuqPiQBb6EPKdFSD1UjJI"
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
@@ -441,7 +441,7 @@ async def shutdown(ctx):
     await ctx.send("🌸 Shutting down bot...")
     await bot.close()
 
-# ========== WIPE ROLES COMMAND ==========
+# ========== WIPE ROLES ==========
 @bot.command(name="wiperoles")
 async def wipe_roles(ctx):
     if not is_owner(ctx):
@@ -472,16 +472,16 @@ async def wipe_roles(ctx):
                 pass
     
     await ctx.send(f"✅ **Deleted {roles_deleted} roles!**")
-    await ctx.send("🎉 All roles have been wiped! Use `!fullsetup` to create new ones.")
+    await ctx.send("🎉 All roles wiped! Use `!fullsetup` to create new ones.")
 
-# ========== RESET COMMAND (PRESERVES PAYMENT) ==========
+# ========== RESET (PRESERVES PAYMENT) ==========
 @bot.command(name="reset")
 async def reset_server(ctx):
     if not is_owner(ctx):
         return await ctx.send("👑 **Owner only!**")
     
-    await ctx.send("⚠️ **WARNING: This will delete ALL channels, categories, and roles EXCEPT the 💵 PAYMENT category and payment channel!** ⚠️")
-    await ctx.send("Type `CONFIRM RESET` within 30 seconds to proceed.")
+    await ctx.send("⚠️ **WARNING: Deletes ALL channels, categories, roles EXCEPT 💵 PAYMENT!** ⚠️")
+    await ctx.send("Type `CONFIRM RESET` within 30 seconds.")
     
     def check(m):
         return m.author == ctx.author and m.content == "CONFIRM RESET"
@@ -491,14 +491,14 @@ async def reset_server(ctx):
     except asyncio.TimeoutError:
         return await ctx.send("❌ Reset cancelled.")
     
-    await ctx.send("🗑️ **Cleaning server (preserving 💵 PAYMENT)...**")
+    await ctx.send("🗑️ **Cleaning server...**")
     g = ctx.guild
     
-    protected_category_names = ["💵 PAYMENT", "💰 STORE"]
-    protected_channel_names = ["payment", "💵 payment", "💰 pricing", "📖 how-to-buy"]
+    protected_cats = ["💵 PAYMENT", "💰 STORE"]
+    protected_chans = ["payment", "💵 payment", "💰 pricing", "📖 how-to-buy"]
     
     for channel in g.channels:
-        if channel.name not in protected_channel_names:
+        if channel.name not in protected_chans:
             try:
                 await channel.delete()
                 await asyncio.sleep(0.1)
@@ -506,7 +506,7 @@ async def reset_server(ctx):
                 pass
     
     for category in g.categories:
-        if category.name not in protected_category_names:
+        if category.name not in protected_cats:
             try:
                 await category.delete()
                 await asyncio.sleep(0.1)
@@ -521,8 +521,7 @@ async def reset_server(ctx):
             except:
                 pass
     
-    await ctx.send("🎉 **Server cleaned! 💵 PAYMENT category and payment channel were preserved!**")
-    await ctx.send("Use `!fullsetup` to create everything else!")
+    await ctx.send("🎉 **Server cleaned! 💵 PAYMENT preserved! Use `!fullsetup`**")
 
 # ========== FULL SETUP ==========
 @bot.command(name="fullsetup")
@@ -530,85 +529,90 @@ async def full_setup(ctx):
     if not is_owner(ctx):
         return await ctx.send("👑 Owner only!")
     
-    await ctx.send("🌸 **Starting FULL server creation with EMOJI LEVEL ROLES!** 🌸")
-    await ctx.send("⏰ **This will take 10-15 minutes. Please wait...**")
-    
+    await ctx.send("🌸 **Creating server with EMOJI roles! This takes 10-15 min...** 🌸")
     g = ctx.guild
     
-    # Create basic roles
+    # Create roles
     unverified = await g.create_role(name="🚫 Unverified", color=discord.Color.dark_gray())
-    await ctx.send("✅ Created 🚫 Unverified")
-    await asyncio.sleep(0.5)
+    await ctx.send("✅ 🚫 Unverified")
+    await asyncio.sleep(0.3)
     
     verified = await g.create_role(name="✅ Verified", color=discord.Color.green())
-    await ctx.send("✅ Created ✅ Verified")
-    await asyncio.sleep(0.5)
+    await ctx.send("✅ ✅ Verified")
+    await asyncio.sleep(0.3)
     
     member = await g.create_role(name="🌸 Member", color=discord.Color.from_rgb(255, 182, 193))
-    await ctx.send("✅ Created 🌸 Member")
-    await asyncio.sleep(0.5)
+    await ctx.send("✅ 🌸 Member")
+    await asyncio.sleep(0.3)
     
     owner = await g.create_role(name="👑 Sakura Owner", color=discord.Color.gold())
-    await ctx.send("✅ Created 👑 Sakura Owner")
-    await asyncio.sleep(0.5)
+    await ctx.send("✅ 👑 Sakura Owner")
+    await asyncio.sleep(0.3)
     
     admin = await g.create_role(name="⚙️ Blossom Admin", color=discord.Color.red())
-    await ctx.send("✅ Created ⚙️ Blossom Admin")
-    await asyncio.sleep(0.5)
+    await ctx.send("✅ ⚙️ Blossom Admin")
+    await asyncio.sleep(0.3)
     
     mod = await g.create_role(name="🛡️ Head Petal", color=discord.Color.orange())
-    await ctx.send("✅ Created 🛡️ Head Petal")
-    await asyncio.sleep(0.5)
+    await ctx.send("✅ 🛡️ Head Petal")
+    await asyncio.sleep(0.3)
     
     support = await g.create_role(name="🎫 Blossom Support", color=discord.Color.blue())
-    await ctx.send("✅ Created 🎫 Blossom Support")
-    await asyncio.sleep(0.5)
+    await ctx.send("✅ 🎫 Blossom Support")
+    await asyncio.sleep(0.3)
     
-    tweak_access = await g.create_role(name="🎮 Tweaker Access", color=discord.Color.green())
-    await ctx.send("✅ Created 🎮 Tweaker Access")
-    await asyncio.sleep(0.5)
+    tweak_acc = await g.create_role(name="🎮 Tweaker Access", color=discord.Color.green())
+    await ctx.send("✅ 🎮 Tweaker Access")
+    await asyncio.sleep(0.3)
     
-    spoof_access = await g.create_role(name="🛡️ Spoofer Access", color=discord.Color.dark_green())
-    await ctx.send("✅ Created 🛡️ Spoofer Access")
-    await asyncio.sleep(0.5)
-    
-    vet70 = await g.create_role(name="🏆 Veteran 70+", color=discord.Color.gold())
-    await ctx.send("✅ Created 🏆 Veteran 70+")
-    await asyncio.sleep(0.5)
-    
-    elite80 = await g.create_role(name="👑 Elite 80+", color=discord.Color.dark_gold())
-    await ctx.send("✅ Created 👑 Elite 80+")
-    await asyncio.sleep(0.5)
+    spoof_acc = await g.create_role(name="🛡️ Spoofer Access", color=discord.Color.dark_green())
+    await ctx.send("✅ 🛡️ Spoofer Access")
+    await asyncio.sleep(0.3)
     
     tweaker_role = await g.create_role(name="🌸 Tweaker", color=discord.Color.from_rgb(255, 105, 180))
-    await ctx.send("✅ Created 🌸 Tweaker")
-    await asyncio.sleep(0.5)
+    await ctx.send("✅ 🌸 Tweaker")
+    await asyncio.sleep(0.3)
     
     spoofer_role = await g.create_role(name="⚔️ Spoofer", color=discord.Color.from_rgb(108, 92, 231))
-    await ctx.send("✅ Created ⚔️ Spoofer")
-    await asyncio.sleep(0.5)
+    await ctx.send("✅ ⚔️ Spoofer")
+    await asyncio.sleep(0.3)
     
-    # Create level roles with EMOJIS
-    await ctx.send("📝 Creating level roles with EMOJIS (Lvl 100 to Lvl 1)...")
+    both_role = await g.create_role(name="💎 Both Package", color=discord.Color.from_rgb(255, 215, 0))
+    await ctx.send("✅ 💎 Both Package")
+    await asyncio.sleep(0.3)
     
-    level_emojis = {
-        1: "🌱", 2: "🍃", 3: "🌿", 4: "🌸", 5: "🌼", 6: "🌻", 7: "🌺", 8: "🌷", 9: "🌹", 10: "🌳",
-        11: "🍀", 12: "🍂", 13: "🍁", 14: "🌾", 15: "💮", 16: "🎋", 17: "🎍", 18: "🍃", 19: "🌱", 20: "🍎",
-        21: "🍊", 22: "🍋", 23: "🍒", 24: "🍑", 25: "🥝", 26: "🥥", 27: "🥑", 28: "🍆", 29: "🥔", 30: "🥕",
-        31: "🌽", 32: "🥦", 33: "🥒", 34: "🌶️", 35: "🧅", 36: "🧄", 37: "🥐", 38: "🥨", 39: "🥯", 40: "🍞",
-        41: "🧀", 42: "🍖", 43: "🍗", 44: "🥩", 45: "🥓", 46: "🍔", 47: "🍟", 48: "🍕", 49: "🌭", 50: "🥪",
-        51: "🌮", 52: "🌯", 53: "🥙", 54: "🧆", 55: "🥚", 56: "🍳", 57: "🥘", 58: "🍲", 59: "🥣", 60: "🥗",
-        61: "🍿", 62: "🧈", 63: "🧂", 64: "🥫", 65: "🍱", 66: "🍘", 67: "🍙", 68: "🍚", 69: "🍛", 70: "🍜",
-        71: "🍝", 72: "🍠", 73: "🍢", 74: "🍣", 75: "🍤", 76: "🍥", 77: "🥮", 78: "🍡", 79: "🥟", 80: "🥠",
-        81: "🥡", 82: "🍦", 83: "🍧", 84: "🍨", 85: "🍩", 86: "🍪", 87: "🎂", 88: "🍰", 89: "🧁", 90: "🥧",
-        91: "🍫", 92: "🍬", 93: "🍭", 94: "🍮", 95: "🍯", 96: "🍼", 97: "🥛", 98: "☕", 99: "🍵", 100: "🏆"
-    }
+    vet70 = await g.create_role(name="🏆 Veteran 70+", color=discord.Color.gold())
+    await ctx.send("✅ 🏆 Veteran 70+")
+    await asyncio.sleep(0.3)
     
+    elite80 = await g.create_role(name="👑 Elite 80+", color=discord.Color.dark_gold())
+    await ctx.send("✅ 👑 Elite 80+")
+    await asyncio.sleep(0.3)
+    
+    legend90 = await g.create_role(name="⭐ Legend 90+", color=discord.Color.purple())
+    await ctx.send("✅ ⭐ Legend 90+")
+    await asyncio.sleep(0.3)
+    
+    god100 = await g.create_role(name="🔱 God 100+", color=discord.Color.from_rgb(0, 255, 127))
+    await ctx.send("✅ 🔱 God 100+")
+    await asyncio.sleep(0.3)
+    
+    gaming = await g.create_role(name="🎮 Gaming Pro", color=discord.Color.from_rgb(114, 137, 218))
+    await ctx.send("✅ 🎮 Gaming Pro")
+    await asyncio.sleep(0.3)
+    
+    fortnite = await g.create_role(name="🔫 Fortnite Legend", color=discord.Color.from_rgb(65, 105, 225))
+    await ctx.send("✅ 🔫 Fortnite Legend")
+    await asyncio.sleep(0.3)
+    
+    valorant = await g.create_role(name="🗡️ Valorant God", color=discord.Color.from_rgb(220, 20, 60))
+    await ctx.send("✅ 🗡️ Valorant God")
+    await asyncio.sleep(0.3)
+    
+    # Level roles with emojis
+    await ctx.send("📝 Creating level roles (Lvl 100 to Lvl 1) with emojis...")
     for i in range(100, 0, -1):
         try:
-            emoji = level_emojis.get(i, "⭐")
-            role_name = f"{emoji} Lvl {i}"
-            
             if i >= 90:
                 color = discord.Color.from_rgb(255, 215, 0)
             elif i >= 70:
@@ -621,16 +625,33 @@ async def full_setup(ctx):
                 color = discord.Color.green()
             else:
                 color = discord.Color.light_gray()
-            
-            await g.create_role(name=role_name, color=color)
+            await g.create_role(name=f"Lvl {i}", color=color)
             if i % 20 == 0:
-                await ctx.send(f"✅ Created levels down to {emoji} Lvl {i}")
-            await asyncio.sleep(0.15)
+                await ctx.send(f"✅ Created levels down to Lvl {i}")
+            await asyncio.sleep(0.1)
         except:
             pass
     
-    await ctx.send("✅ **ALL EMOJI LEVEL ROLES CREATED!**")
+    await ctx.send("✅ **ALL ROLES CREATED!**")
     await asyncio.sleep(2)
     
-    # Create verify channel
-    verify
+    # Verify channel
+    verify_ch = await g.create_text_channel("verify")
+    await verify_ch.set_permissions(unverified, read_messages=True, send_messages=True)
+    await verify_ch.send("**🌸 VERIFY HERE 🌸**\nType `!verify` to get verified!")
+    await ctx.send("✅ verify channel")
+    
+    # Generator channel
+    gen_overwrites = {g.default_role: discord.PermissionOverwrite(read_messages=False)}
+    gen_overwrites[owner] = discord.PermissionOverwrite(read_messages=True, send_messages=True)
+    gen_channel = await g.create_text_channel("generator", overwrites=gen_overwrites)
+    await gen_channel.send("**🌸 SAKURA LICENSE GENERATOR 🌸**\n\n`!gen tweaker day`\n`!gen tweaker week`\n`!gen tweaker month`\n`!gen tweaker year`\n`!gen tweaker lifetime`\n\n`!gen spoofer day`\n`!gen spoofer week`\n`!gen spoofer month`\n`!gen spoofer year`\n`!gen spoofer lifetime`\n\n`!gen both day`\n`!gen both week`\n`!gen both month`\n`!gen both year`\n`!gen both lifetime`")
+    await ctx.send("✅ generator channel")
+    
+    await ctx.send("🎉 **SERVER CREATION COMPLETE!** 🎉")
+    await ctx.send("✅ All roles have emojis!")
+    await ctx.send("✅ Unverified has NO access except #verify")
+    await ctx.send("🌸 **Type `!cmds` to see all commands!**")
+
+# RUN THE BOT
+bot.run(TOKEN)
