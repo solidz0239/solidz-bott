@@ -5,7 +5,7 @@ import string
 import time
 import asyncio
 
-TOKEN = "URTTOKENHERE"
+TOKEN = "MTUxMzUxNDA1NDkxODk5NjE4MA.GtevdL.9AFNXOvEUC1cCU3HqBuqPiQBb6EPKdFSD1UjJI"
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
