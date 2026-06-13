@@ -1,2 +1,1 @@
-# solidz-bott
-Python
+python bot that makes a buyer server its good
